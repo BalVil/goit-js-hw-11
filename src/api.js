@@ -7,7 +7,7 @@ export default class ImagesApi {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
-    this.per_page = 40;
+    this.per_page = 30;
   }
 
   fetchImages() {
@@ -23,23 +23,9 @@ export default class ImagesApi {
 
     const URL = `${BASE_URL}?${params}`;
 
-    return axios
-      .get(URL)
-      .then(({ data }) => {
-        console.log(data);
-        return data;
-      })
-      .then(({ hits, totalHits }) => {
-        this.incrementPage();
-        // if (!totalHits) {
-        //   Notify.failure(
-        //     'Sorry, there are no images matching your search query. Please try again.'
-        //   );
-        // } else {
-        //   console.log(totalHits);
-        return { hits, totalHits };
-        // }
-      });
+    return axios.get(URL).then(({ data }) => {
+      return data;
+    });
   }
 
   incrementPage() {
