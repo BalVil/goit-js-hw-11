@@ -32,7 +32,7 @@ function onSearch(evt) {
   fetchImages();
 }
 
-// Notify.success(`Hooray! We found ${totalHits} images.`);
+// Куди це повідомлення?: Notify.success(`Hooray! We found ${totalHits} images.`);
 
 function fetchImages() {
   imagesApi.fetchImages().then(({ hits, totalHits }) => {
