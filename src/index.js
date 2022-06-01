@@ -24,8 +24,6 @@ function onSearch(evt) {
 
   loadMoreBtn.hide();
 
-  console.log(loadMoreBtn.hide() === true);
-
   imagesApi.resetPage();
   clearImagesBox();
 
