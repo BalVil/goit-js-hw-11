@@ -4,14 +4,17 @@ import LoadMoreBtn from './load-more-btn';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+// =====Refs===========
 const searchFormRef = document.querySelector('#search-form');
 const galleryRef = document.querySelector('.gallery');
 
+// =======СlassInstances========
 const imagesApi = new ImagesApi();
 const loadMoreBtn = new LoadMoreBtn({ selector: '.load-more', hidden: true });
 
+// ====Listeners=========
 searchFormRef.addEventListener('submit', onSearch);
-loadMoreBtn.button.addEventListener('click', fetchImages);
+loadMoreBtn.button.addEventListener('click', onLoadMoreBtn);
 
 function onSearch(evt) {
   evt.preventDefault();
@@ -23,44 +26,43 @@ function onSearch(evt) {
   }
 
   loadMoreBtn.hide();
-
   imagesApi.resetPage();
   clearImagesBox();
 
-  fetchImages();
+  imagesApi
+    .fetchImages()
+    .then(({ hits, totalHits }) => {
+      if (!hits.length) {
+        Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+      } else {
+        Notify.success(`Hooray! We found ${totalHits} images.`);
+
+        loadMoreBtn.show();
+        createImagesBox(hits);
+        new SimpleLightbox('.gallery a');
+      }
+    })
+    .catch(error => console.log(error.message));
 }
 
-// Куди це повідомлення?: Notify.success(`Hooray! We found ${totalHits} images.`);
-
-function fetchImages() {
-  imagesApi.fetchImages().then(({ hits, totalHits }) => {
-    const totalPages = totalHits / imagesApi.per_page;
-    if (imagesApi.page > totalPages) {
-      Notify.failure(
-        "We're sorry, but you've reached the end of search results."
-      );
-      return loadMoreBtn.hide();
-    }
-
-    if (!totalHits) {
-      Notify.failure(
-        'Sorry, there are no images matching your search query. Please try again.'
-      );
-    } else {
+function onLoadMoreBtn() {
+  imagesApi
+    .fetchImages()
+    .then(({ hits }) => {
       createImagesBox(hits);
-      loadMoreBtn.show();
-
-      makeSimpleLightboxGallery();
-
-      // Як має працювати прокрутка? (зверху вниз чи навпаки?) Якщо знизу, то треба створити кнопку?
+      new SimpleLightbox('.gallery a').refresh();
       smoothScrolling('.container');
-    }
-  });
-}
 
-function makeSimpleLightboxGallery() {
-  let simpleLightboxGallery = new SimpleLightbox('.gallery a');
-  simpleLightboxGallery.refresh();
+      if (hits.length < imagesApi.per_page) {
+        Notify.failure(
+          "We're sorry, but you've reached the end of search results."
+        );
+        return loadMoreBtn.hide();
+      }
+    })
+    .catch(error => console.log(error.message));
 }
 
 function clearImagesBox() {
