@@ -84,8 +84,8 @@ function createImagesBox(images) {
         downloads,
       }) => {
         return `<a class="simplelightbox-gallery" href="${largeImageURL}"
-  ><div width="350" height="200" class="photo-card">
-    <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+  ><div class="photo-card">
+    <img src="${webformatURL}" alt="${tags}" width="430" height="240" loading="lazy" />
     <div class="info">
       <p class="info-item">
         <b>Likes <span class="info__value">${likes}</span></b>
