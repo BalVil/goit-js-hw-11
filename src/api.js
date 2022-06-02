@@ -7,7 +7,7 @@ export default class ImagesApi {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
-    this.per_page = 30;
+    this.per_page = 50;
   }
 
   fetchImages() {
@@ -24,6 +24,7 @@ export default class ImagesApi {
     const URL = `${BASE_URL}?${params}`;
 
     return axios.get(URL).then(({ data }) => {
+      this.incrementPage();
       return data;
     });
   }

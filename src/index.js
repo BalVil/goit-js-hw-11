@@ -34,6 +34,14 @@ function onSearch(evt) {
 
 function fetchImages() {
   imagesApi.fetchImages().then(({ hits, totalHits }) => {
+    const totalPages = totalHits / imagesApi.per_page;
+    if (imagesApi.page > totalPages) {
+      Notify.failure(
+        "We're sorry, but you've reached the end of search results."
+      );
+      return loadMoreBtn.hide();
+    }
+
     if (!totalHits) {
       Notify.failure(
         'Sorry, there are no images matching your search query. Please try again.'
