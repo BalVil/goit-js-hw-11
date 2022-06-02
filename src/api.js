@@ -7,7 +7,7 @@ export default class ImagesApi {
   constructor() {
     this.searchQuery = '';
     this.page = 1;
-    this.per_page = 50;
+    this.per_page = 40;
   }
 
   fetchImages() {

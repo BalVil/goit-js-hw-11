@@ -16,6 +16,8 @@ const loadMoreBtn = new LoadMoreBtn({ selector: '.load-more', hidden: true });
 searchFormRef.addEventListener('submit', onSearch);
 loadMoreBtn.button.addEventListener('click', onLoadMoreBtn);
 
+let simpleLightbox = null;
+
 function onSearch(evt) {
   evt.preventDefault();
 
@@ -41,7 +43,7 @@ function onSearch(evt) {
 
         loadMoreBtn.show();
         createImagesBox(hits);
-        new SimpleLightbox('.gallery a');
+        makeSimpleLightbox();
       }
     })
     .catch(error => console.log(error.message));
@@ -52,7 +54,7 @@ function onLoadMoreBtn() {
     .fetchImages()
     .then(({ hits }) => {
       createImagesBox(hits);
-      new SimpleLightbox('.gallery a').refresh();
+      refreshSimpleLightbox();
       smoothScrolling('.container');
 
       if (hits.length < imagesApi.per_page) {
@@ -82,7 +84,7 @@ function createImagesBox(images) {
         downloads,
       }) => {
         return `<a class="simplelightbox-gallery" href="${largeImageURL}"
-  ><div class="photo-card">
+  ><div width="350" height="200" class="photo-card">
     <img src="${webformatURL}" alt="${tags}" loading="lazy" />
     <div class="info">
       <p class="info-item">
@@ -104,6 +106,13 @@ function createImagesBox(images) {
     )
     .join('');
   galleryRef.insertAdjacentHTML('beforeend', markup);
+}
+
+function makeSimpleLightbox() {
+  simpleLightbox = new SimpleLightbox('.gallery a');
+}
+function refreshSimpleLightbox() {
+  simpleLightbox.refresh();
 }
 
 function smoothScrolling(selector) {
