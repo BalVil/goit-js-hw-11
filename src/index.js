@@ -1,6 +1,5 @@
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import ImagesApi from './api';
-import LoadMoreBtn from './load-more-btn';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
@@ -10,14 +9,11 @@ const galleryRef = document.querySelector('.gallery');
 
 // =======СlassInstances========
 const imagesApi = new ImagesApi();
-const loadMoreBtn = new LoadMoreBtn({ selector: '.load-more', hidden: true });
 
 // ====Listeners=========
 searchFormRef.addEventListener('submit', onSearch);
-// loadMoreBtn.button.addEventListener('click', onLoadMoreBtn);
 
 let simpleLightbox = null;
-let lastImg = null;
 
 async function onSearch(evt) {
   evt.preventDefault();
@@ -28,7 +24,6 @@ async function onSearch(evt) {
     return Notify.failure('Enter something');
   }
 
-  loadMoreBtn.hide();
   imagesApi.resetPage();
   clearImagesBox();
 
@@ -42,39 +37,15 @@ async function onSearch(evt) {
     } else {
       Notify.success(`Hooray! We found ${totalHits} images.`);
 
-      // loadMoreBtn.show();
       createImagesBox(hits);
       makeSimpleLightbox();
 
-      lastImg = document.querySelector('.simplelightbox-gallery:last-child');
-
-      if (lastImg) {
-        infiniteObserver.observe(lastImg);
-      }
+      observer.observe(galleryRef.lastElementChild);
     }
   } catch (error) {
     console.log(error.message);
   }
 }
-
-// async function onLoadMoreBtn() {
-//   try {
-//     const { hits } = await imagesApi.fetchImages();
-
-//     createImagesBox(hits);
-//     refreshSimpleLightbox();
-//     // smoothScrolling('.container');
-
-//     if (hits.length < imagesApi.per_page) {
-//       Notify.failure(
-//         "We're sorry, but you've reached the end of search results."
-//       );
-//       return loadMoreBtn.hide();
-//     }
-//   } catch (error) {
-//     console.log(error.message);
-//   }
-// }
 
 function clearImagesBox() {
   galleryRef.innerHTML = '';
@@ -124,27 +95,26 @@ function refreshSimpleLightbox() {
   simpleLightbox.refresh();
 }
 
-// function smoothScrolling(selector) {
-//   const { height: cardHeight } = document
-//     .querySelector(selector)
-//     .firstElementChild.getBoundingClientRect();
-
-//   window.scrollBy({
-//     top: cardHeight,
-//     behavior: 'smooth',
-//   });
-// }
-
 // infinite scrolling
-
-const infiniteObserver = new IntersectionObserver(
-  async ([entry], observer) => {
-    if (entry.isIntersecting) {
-      const { hits, totalHits } = await imagesApi.fetchImages();
+const onInfiniteScroll = async function (entries, observer) {
+  try {
+    if (entries[0].isIntersecting) {
+      observer.unobserve(entries[0].target);
+      const { hits } = await imagesApi.fetchImages();
       createImagesBox(hits);
-      observer.unobserve(entry.target);
-      lastImg = document.querySelector('.simplelightbox-gallery:last-child');
+      refreshSimpleLightbox();
+
+      if (hits.length < imagesApi.per_page) {
+        observer.unobserve(entries[0].target);
+        Notify.failure(
+          "We're sorry, but you've reached the end of search results."
+        );
+      } else {
+        observer.observe(galleryRef.lastElementChild);
+      }
     }
-  },
-  { threshold: 0.5 }
-);
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+const observer = new IntersectionObserver(onInfiniteScroll, { threshold: 0.7 });

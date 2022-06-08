@@ -19,8 +19,9 @@ a {
 }
 
 .gallery {
-  padding-top: 80px;
-  padding-bottom: 24px;
+  position: relative;
+  top: 90px;
+  padding-bottom: 15px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -28,7 +29,6 @@ a {
 
 .simplelightbox-gallery {
   margin: 15px;
-  // flex-basis: calc(100% / 4 - 15px * 2);
 }
 
 .info {
