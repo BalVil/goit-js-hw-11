@@ -16,11 +16,8 @@
   margin-right: -50%;
   transform: translate(-50%, -50%);
 
-  @media screen and (min-width: 768px) {
-    width: 360px;
-  }
-
   @media screen and (min-width: 1280px) {
+    width: 400px;
   }
 }
 
@@ -31,7 +28,7 @@
   padding: 0.4rem 0.75rem;
 
   font-family: inherit;
-  font-size: 1rem;
+  font-size: 1.2rem;
   line-height: 1.5;
   background-color: #fff;
   background-clip: padding-box;

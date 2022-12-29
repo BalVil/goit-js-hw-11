@@ -3,6 +3,13 @@ import ImagesApi from './api';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
+Notify.init({
+  width: '320px',
+  position: 'center-center',
+  fontSize: '20px',
+  borderRadius: '8px',
+});
+
 // =====Refs===========
 const searchFormRef = document.querySelector('#search-form');
 const galleryRef = document.querySelector('.gallery');
@@ -35,7 +42,7 @@ async function onSearch(evt) {
         'Sorry, there are no images matching your search query. Please try again.'
       );
     } else {
-      Notify.success(`Hooray! We found ${totalHits} images.`);
+      Notify.success(`We found ${totalHits} images.`);
 
       createImagesBox(hits);
       makeSimpleLightbox();
