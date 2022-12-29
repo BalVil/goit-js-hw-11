@@ -1,20 +1,27 @@
-.search-wrapp {
-  position: fixed;
+.search-wrap {
+  position: relative;
   width: 100%;
-  z-index: 99;
-
-  height: 75px;
-  padding: 15px;
+  height: 80px;
 
   background-color: #4457b2;
+  box-shadow: rgb(0 0 0 / 20%) 0px 2px 4px -1px,
+    rgb(0 0 0 / 14%) 0px 4px 5px 0px, rgb(0 0 0 / 12%) 0px 1px 10px 0px;
 }
 
 .search-form {
-  min-width: 360px;
+  width: 320px;
   position: absolute;
-  top: 20px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+
+  @media screen and (min-width: 768px) {
+    width: 360px;
+  }
+
+  @media screen and (min-width: 1280px) {
+  }
 }
 
 .search-form input {
@@ -41,15 +48,17 @@
 }
 .search-form button {
   position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   top: 0;
   bottom: 0;
   right: 0;
   width: 2.5rem;
-
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
   border: 1px solid #bdbdbd;
+  background-clip: padding-box;
+
   background-color: #f5f5f5;
   cursor: pointer;
   color: #212529;
